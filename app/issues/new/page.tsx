@@ -18,16 +18,21 @@ const NewIssuePage = () => {
     const router = useRouter();
     const {register, control, handleSubmit} = useForm<IssueForm>();
   return (
-    <form className="max-w-xl space-y-5"  onSubmit={handleSubmit(async (data) => {
-        await axios.post('/api/issues', data);
-        router.push('/issues');
+    <form className="max-w-xl space-y-5"
+      onSubmit={handleSubmit(async (data) => {
+        try {
+          await axios.post('/api/issues', data);
+          router.push('/issues');          
+        } catch (error) {
+          console.log(error)
+        }
     })}>
-        <TextField.Root placeholder='Title' {...register('title')} >            
+        <TextField.Root placeholder='Title' {...register('title')} >              
         </TextField.Root>
         <Controller 
           name="description"
           control={control}
-          render={({ field }) =>  <SimpleMDE placeholder='Description' />}
+          render={({ field }) =>  <SimpleMDE placeholder='Description' {...field} />}
         />
        
         <Button>Submit New Issue</Button>
